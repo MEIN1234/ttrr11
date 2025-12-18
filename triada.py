@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
+import os
+from background import keep_alive #импорт функции для поддержки работоспособности
+import pip
+pip.main(['install', 'pytelegrambotapi'])
 import requests
 import telebot
 from telebot import types
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 # import requests # Удалены неиспользуемые импорты
 # import time     # Удалены неиспользуемые импорты
-# import os       # Удалены неиспользуемые импорты
 
 # --- Константы ---
-TOKEN = '8321838627:AAEBxDOlN6YNG0Zp_IZdI0hVp7RfYUU25zc'
+TOKEN = '8321838627:AAE3S9czdKbG1mJG0rDW9KrFT7i31UB1sg0'
 ADMIN_CHAT_ID = 6055009734    # Ваш Telegram ID
 # Удалены дублирующиеся переменные ADMIN_ID и API_TOKEN
 
@@ -46,6 +49,14 @@ def send_welcome(message):
         markup.add(types.KeyboardButton(category))
     markup.add(types.KeyboardButton('cart'))
     markup.add(types.KeyboardButton('pay'))
+bot.send_message(
+    message.chat.id, 
+    f"""Hello, {message.from_user.first_name}! 
+    On our marketplace you can buy: best guns, drugs and soon documents for all anything✨✨✨ 
+    All of this is imported from Mexico,Russia,Ukraine,Portugal and locally produced 👨‍🌾"f"
+    Choose category:""",
+    reply_markup=markup
+)
 
 @bot.message_handler(func=lambda message: message.text in catalog.keys())
 def show_products(message):
@@ -173,9 +184,6 @@ def send_requisites(message):
 
 
 if __name__ == '__main__':
-    print("Bot is starting...")
-    try:
-        # Используем только один запуск polling
-        bot.infinity_polling(timeout=10, long_polling_timeout=5)
-    except Exception as e:
-        print(f"Error in polling: {e}")
+    keep_alive()  # Запуск веб-сервера Flask в отдельном потоке
+    print("Бот запущен!")
+    bot.infinity_polling()
